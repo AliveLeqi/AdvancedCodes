@@ -1,148 +1,147 @@
-<!DOCTYPE html>
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title></title>
     <link rel="shortcut icon" href="http://mtw.so/65TuLF">
-
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="ServerContext" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="xview" content="text">
-    <link href="https://cdn.jsdelivr.net/gh/AliveLeqi/WebsiteMaking@v1.00/Pictures_plugin/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/AliveLeqi/WebsiteMaking@v1.00/Pictures_plugin/plugin.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/AliveLeqi/WebsiteMaking@v1.00/Pictures_plugin/xform.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
     <style>
-        .crx_bdwk_down_wrap {
-            top: 70%;
-            left: 0;
+        .over {
             position: fixed;
-            z-index: 99999999;
-            color: #fff;
-            user-select: none;
+            left: 0;
+            top: 0;
+            width: 100%;
+            z-index: 100;
         }
 
-        .crx_bdwk_down_wrap .crx_bdwk_down_loading {
-            background-color: #666;
-            cursor: wait;
-            width: 126px;
+        .tempContainer {
+            position: fixed;
+            width: 100%;
+            margin-right: 0px;
+            margin-left: 0px;
             text-align: center;
-            padding: 16px 0;
+            z-index: 101;
+        }
+    </style>
+    <style>
+        img {
+            max-width: 50%;
         }
 
-        .crx_bdwk_down_wrap .crx_bdwk_down_loading p {
-            font-size: 14px;
+        video {
+            max-width: 100%;
+            height: auto;
         }
 
-        .crx_bdwk_down_wrap .crx_bdwk_down_loading small {
-            font-size: 10px;
+        header ul li {
+            float: left;
+            list-style: none;
+            list-style-type: none;
+            margin-right: 10px;
         }
 
-        .crx_bdwk_down_wrap .crx_bdwk_down_btn {
-            width: 126px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 14px;
-            background-color: #dd5a57;
-            position: relative;
-        }
-
-        .crx_bdwk_down_wrap .crx_bdwk_down_types {
-            display: flex;
-            text-align: center;
-            align-items: center;
-            background-color: #666;
-            font-size: 12px;
-        }
-
-        .crx_bdwk_down_wrap .crx_bdwk_down_types div {
-            position: relative;
-        }
-
-        .crx_bdwk_down_wrap .crx_bdwk_down_types div:after {
-            content: ' ';
-            height: 12px;
-            width: 1px;
-            background-color: #eee;
-            position: absolute;
-            top: 10px;
-            right: 0;
-            transform: scaleX(0.5);
-        }
-
-        .crx_bdwk_down_wrap .crx_bdwk_down_types div:last-child:after {
+        header select {
             display: none;
         }
 
-        .crx_bdwk_down_wrap .crx_bdwk_down_types_check {
-            flex: 1;
-            color: #dd5a57;
-            padding: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        @media (max-width:960px) {
+            header ul {
+                display: none;
+            }
 
-        .crx_bdwk_down_wrap .crx_bdwk_down_types_uncheck {
-            flex: 1;
-            padding: 8px;
-            cursor: pointer;
-            color: #fff;
-            font-weight: lighter;
+            header select {
+                display: inline-block;
+            }
         }
     </style>
 </head>
 
-<body class="" >
-    <div class="container" style="max-width: 750px;">
-        <p>
-            <img class="img-responsive"
-                src="https://static.aichat.net/chat/202112/1a039fc0-8d64-4a7c-b85d-97685b0c6324.jpg"
-                style="cursor: zoom-in;">
-        </p>
+<body>
+    <div class="over"></div>
+    <!--背景层-->
+    <div class="logoImg amplifyImg">
+        <!--注意：此处的amlifyImg不可少-->
+        <img src="https://static.aichat.net/chat/202112/1a039fc0-8d64-4a7c-b85d-97685b0c6324.jpg" style="cursor: zoom-in;" /><!-- 此处是引入图片的路径 -->
     </div>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AliveLeqi/WebsiteMaking@v1.00/Pictures_plugin/bootstrap.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AliveLeqi/WebsiteMaking@v1.00/Pictures_plugin/plugin.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AliveLeqi/WebsiteMaking@v1.00/Pictures_plugin/xform.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $('.container').css('max-width', '750px');
+    <script>
+        $(document).ready(function () {
+            var imgsObj = $('.amplifyImg img');//需要放大的图像
+            if (imgsObj) {
+                $.each(imgsObj, function () {
+                    $(this).click(function () {
+                        var currImg = $(this);
+                        coverLayer(1);
+                        var tempContainer = $('<div class=tempContainer></div>');//图片容器
+                        with (tempContainer) {//width方法等同于$(this)
+                            appendTo("body");
+                            var windowWidth = $(window).width();
+                            var windowHeight = $(window).height();
+                            //获取图片原始宽度、高度
+                            var orignImg = new Image();
+                            orignImg.src = currImg.attr("src");
+                            var currImgWidth = orignImg.width;
+                            var currImgHeight = orignImg.height;
+                            if (currImgWidth < windowWidth) {//为了让图片不失真，当图片宽度较小的时候，保留原图
+                                if (currImgHeight < windowHeight) {
+                                    var topHeight = (windowHeight - currImgHeight) / 2;
+                                    if (topHeight > 35) {/*此处为了使图片高度上居中显示在整个手机屏幕中：因为在android,ios的微信中会有一个title导航，35为title导航的高度*/
+                                        topHeight = topHeight - 35;
+                                        css('top', topHeight);
+                                    } else {
+                                        css('top', 0);
+                                    }
+                                    html('<img border=0 src=' + currImg.attr('src') + '>');
+                                } else {
+                                    css('top', 0);
+                                    html('<img border=0 src=' + currImg.attr('src') + ' height=' + windowHeight + '>');
+                                }
+                            } else {
+                                var currImgChangeHeight = (currImgHeight * windowWidth) / currImgWidth;
+                                if (currImgChangeHeight < windowHeight) {
+                                    var topHeight = (windowHeight - currImgChangeHeight) / 2;
+                                    if (topHeight > 35) {
+                                        topHeight = topHeight - 35;
+                                        css('top', topHeight);
+                                    } else {
+                                        css('top', 0);
+                                    }
+                                    html('<img border=0 src=' + currImg.attr('src') + ' width=' + windowWidth + ';>');
+                                } else {
+                                    css('top', 0);
+                                    html('<img border=0 src=' + currImg.attr('src') + ' width=' + windowWidth + '; height=' + windowHeight + '>');
+                                }
+                            }
+                        }
+                        tempContainer.click(function () {
+                            $(this).remove();
+                            coverLayer(0);
+                        });
+                    });
+                });
+            }
+            else {
+                return false;
+            }
+            //使用禁用蒙层效果
+            function coverLayer(tag) {
+                with ($('.over')) {
+                    if (tag == 1) {
+                        css('height', $(document).height());
+                        css('display', 'block');
+                        css('opacity', 1);
+                        css("background-color", "#FFFFFF");
+                        css("background-color", "rgba(0,0,0,0.7)");  //蒙层透明度
+                    }
+                    else {
+                        css('display', 'none');
+                    }
+                }
+            }
         });
     </script>
-
-    <div style="height: 35px; margin-bottom: env(safe-area-inset-bottom);"></div>
-    <div class="viewer-container viewer-backdrop viewer-fixed viewer-fade viewer-transition viewer-hide" tabindex="-1"
-        touch-action="none" id="viewer0" style="z-index: 2015;" aria-hidden="true">
-        <div class="viewer-canvas" data-viewer-action="hide"><img
-                src=""
-                alt="Z" class="viewer-move viewer-transition"
-                style="height: 0px; margin-left: 750.386px; margin-top: 295.33px; position: absolute; width: 0px; max-width: none !important; transform: none;">
-        </div>
-        <div class="viewer-footer">
-            <div class="viewer-title viewer-hide" id="viewerTitle0">Z (960 × 1200)</div>
-            <div class="viewer-toolbar">
-                <ul>
-                    <li tabindex="0" role="button" class="viewer-zoom-in viewer-large" data-viewer-action="zoom-in">
-                    </li>
-                    <li tabindex="0" role="button" class="viewer-zoom-out viewer-large" data-viewer-action="zoom-out">
-                    </li>
-                    <li tabindex="0" role="button" class="viewer-rotate-right viewer-large"
-                        data-viewer-action="rotate-right"></li>
-                    <li tabindex="0" role="button" class="viewer-prev viewer-large" data-viewer-action="prev"></li>
-                    <li tabindex="0" role="button" class="viewer-next viewer-large" data-viewer-action="next"></li>
-                </ul>
-            </div>
-            <div class="viewer-navbar viewer-hide">
-                <ul class="viewer-list" role="navigation" style="width: 31px; transform: none;"></ul>
-            </div>
-        </div>
-        <div class="viewer-tooltip" role="alert" aria-hidden="true">67%</div>
-        <div class="viewer-button viewer-close" data-viewer-action="mix" role="button" tabindex="0"></div>
-        <div class="viewer-player"></div>
-    </div>
 </body>
 
 </html>
